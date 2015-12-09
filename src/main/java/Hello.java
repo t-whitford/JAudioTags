@@ -8,4 +8,9 @@ public class Hello {
         System.out.println("Hello world!");
         System.out.println("Test IntelliJ git setup");
     }
+
+    public static int returnZero()
+    {
+        return 0;
+    }
 }
