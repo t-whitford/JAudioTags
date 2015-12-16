@@ -1,5 +1,7 @@
-package ID3;
+package ID3.v1;
 
+import ID3.v1.GenreEnum;
+import ID3.v1.ID3v1_0;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

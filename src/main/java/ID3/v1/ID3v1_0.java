@@ -1,4 +1,4 @@
-package ID3;
+package ID3.v1;
 
 import com.sun.istack.internal.NotNull;
 
