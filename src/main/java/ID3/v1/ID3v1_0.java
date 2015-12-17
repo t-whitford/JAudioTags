@@ -100,7 +100,7 @@ public class ID3v1_0 {
         return new String(map.get("Title")).trim();
     }
 
-    private void setTag(String tagName, byte[] newContent) throws IOException {
+    protected void setTag(String tagName, byte[] newContent) throws IOException {
         byte[] arr = map.get(tagName);
         for (int i = 0; i < arr.length; i++) {
             if (i < newContent.length) {
