@@ -1,5 +1,6 @@
-package ID3;
+package ID3.v1;
 
+import ID3.v1.GenreEnum;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

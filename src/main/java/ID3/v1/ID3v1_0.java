@@ -1,4 +1,4 @@
-package ID3;
+package ID3.v1;
 
 import com.sun.istack.internal.NotNull;
 
@@ -125,7 +125,7 @@ public class ID3v1_0 {
      * @param newContent The byte array of the new content
      * @throws IOException
      */
-    private void setTag(String tagName, byte[] newContent) throws IOException {
+    protected void setTag(String tagName, byte[] newContent) throws IOException {
         byte[] arr = map.get(tagName);
         for (int i = 0; i < arr.length; i++) {
             if (i < newContent.length) {
