@@ -36,6 +36,11 @@ public class ID3v1_0 {
 
     }
 
+    /**
+     * The constructor will either build an empty tag into the file, or extract an existing tag.
+     * @param file An mp3 file. This operation will change the file.
+     * @throws IOException
+     */
     public ID3v1_0(@NotNull File file) throws IOException {
 
         this.file = file;
@@ -64,6 +69,10 @@ public class ID3v1_0 {
         }
     }
 
+    /**
+     * Write the tag as is to file
+     * @throws IOException
+     */
     private void writeTagToFile() throws IOException {
         File temp = new File(file.getParentFile(), "temp");
         Files.copy(file.toPath(), temp.toPath());
@@ -92,14 +101,30 @@ public class ID3v1_0 {
         temp.delete();
     }
 
+    /**
+     *
+     * @return Returns the map associated with the tag. Each part of the Tag is a seperate entry with a string as the
+     * key and byte array as the content.
+     *
+     */
     public HashMap<String, byte[]> getMap() {
         return map;
     }
 
+    /**
+     *
+     * @return The title from the tag.
+     */
     public String getTitle() {
         return new String(map.get("Title")).trim();
     }
 
+    /**
+     * Sets a tag using the tag name. Immidiately writes the new tag to file.
+     * @param tagName The string of the key of the tag.
+     * @param newContent The byte array of the new content
+     * @throws IOException
+     */
     private void setTag(String tagName, byte[] newContent) throws IOException {
         byte[] arr = map.get(tagName);
         for (int i = 0; i < arr.length; i++) {
@@ -111,18 +136,34 @@ public class ID3v1_0 {
         writeTagToFile();
     }
 
+    /**
+     *
+     * @return The artist from the tag.
+     */
     public String getArtist() {
         return new String(map.get("Artist")).trim();
     }
 
+    /**
+     *
+     * @return The album from the tag
+     */
     public String getAlbum() {
         return new String(map.get("Album")).trim();
     }
 
+    /**
+     *
+     * @return The year from the tag.
+     */
     public String getYear() {
         return new String(map.get("Year"));
     }
 
+    /**
+     *
+     * @return The comment from the Tag
+     */
     public String getComment() {
         return new String(map.get("Comment")).trim();
     }
@@ -131,6 +172,13 @@ public class ID3v1_0 {
         return map.get("Genre")[0];
     }
 
+    /**
+     * Helper class to build arrays
+     * @param array The parent array to take section from
+     * @param start The start of the subarray
+     * @param end The end of the subarray
+     * @return The sub array between start and end
+     */
     private static byte[] getSubArray(byte[] array, int start, int end) {
         int size = end - start + 1;
 
@@ -146,7 +194,16 @@ public class ID3v1_0 {
         return result;
     }
 
+    /**
+     * Builds and returns the full tag in the form of a byte array.
+     * @return byte[] of the array, as would be saved in a file. It is 128 characters long, beginning with "TAG". See
+     * <a href="http://id3.org/ID3v1">ID3v1</a> for more information about the byte array.
+     */
     public byte[] getByteArray() {
+
+        //Add TAG to start, then add all members of the map.
+        //Using Map rather than hardcoding allows children classes to change the Map and this method will still work.
+
         byte[] result = new byte[128];
 
         String tag = "TAG";
@@ -168,31 +225,68 @@ public class ID3v1_0 {
 
     }
 
+    /**
+     * Changes the Title saved in the tag. This saves immidiately to the file associated with the Tag
+     * @param title The title to save.
+     * @throws IOException
+     */
     public void setTitle(String title) throws IOException {
         setTag("Title", title.getBytes());
     }
 
-    public void setArtist(String newArt) throws IOException {
-        setTag("Artist", newArt.getBytes());
+    /**
+     * Changes the artist saved in the tag. This saves immidiately to the file associated with the Tag
+     * @param newArtist The new artist to save.
+     * @throws IOException
+     */
+    public void setArtist(String newArtist) throws IOException {
+        setTag("Artist", newArtist.getBytes());
     }
 
-    public void setAlbum(String newArt) throws IOException {
-        setTag("Album", newArt.getBytes());
+    /**
+     * Changes the Album saved in the tag. This saves immidiately to the file associated with the Tag
+     * @param newAlbum The album to save.
+     * @throws IOException
+     */
+    public void setAlbum(String newAlbum) throws IOException {
+        setTag("Album", newAlbum.getBytes());
     }
 
+    /**
+     * Changes the comment saved in the tag. This saves immidiately to the file associated with the Tag
+     * @param comment
+     * @throws IOException
+     */
     public void setComment(String comment) throws IOException {
         setTag("Comment", comment.getBytes());
     }
 
+    /**
+     * Changes the Year saved in the tag. This saves immidiately to the file associated with the Tag
+     * @param newYear The year to save
+     * @throws IOException
+     */
     public void setYear(String newYear) throws IOException {
         setTag("Year", newYear.getBytes());
     }
 
+    /**
+     * Change the genre of the Tag. This saves immidiately to the file associated with the Tag.
+     * @param newGenre A new Genre to save
+     * @throws IOException
+     */
     public void setGenre(byte newGenre) throws IOException {
+        //TODO Check that genre is valid?
         byte[] tempArr = {newGenre};
         setTag("Genre", (tempArr));
     }
 
+    /**
+     * A static class to check whether a file has an ID3v1_0 tag
+     * @param file The file to inspect
+     * @return True if a tag exists (even if empty). False otherwise
+     * @throws IOException If the file doesn't exist or an error occurs trying to read the file
+     */
     public static boolean hasTag(File file) throws IOException {
 
         BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
@@ -208,12 +302,29 @@ public class ID3v1_0 {
         return (new String(in).compareTo("TAG") == 0);
     }
 
+    /**
+     * Get the file associated with the Tag.
+     * @return The file associated with the Tag.
+     */
     public File getFile() {
         return file;
     }
 
+    /**
+     * Change the file associated with the Tag
+     * @param newFile The new file. This is where any changes are saved to.
+     */
     public void setFile(File newFile)
     {
         this.file = newFile;
+    }
+
+    /**
+     *
+     * @param file
+     */
+    public static void stripTagFromFile(File file)
+    {
+       //TODO - This!
     }
 }
